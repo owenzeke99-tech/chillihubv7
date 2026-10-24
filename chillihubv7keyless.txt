@@ -1,0 +1,262 @@
+--// ChilliHub V7 Expanded Modern RGB Key System
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+--// Remove existing GUI if present
+if CoreGui:FindFirstChild("ChilliHubKeySystem") then
+    CoreGui.ChilliHubKeySystem:Destroy()
+end
+
+--// Config Key & Links
+local CORRECT_KEY = "ChilliHubV7KeyHakwo - KalapwjwbkKapwihebeu"
+local KEY_SAVED_NAME = "ChilliHubV7_SavedKey.txt"
+local GET_KEY_LINK = "https://link4m.org/zfhTz"
+
+--// Check Local Saved Key (Hidden Persistence)
+local function checkSavedKey()
+    if pcall(function() return readfile and readfile(KEY_SAVED_NAME) end) then
+        local saved = readfile(KEY_SAVED_NAME)
+        if saved == CORRECT_KEY then
+            return true
+        end
+    end
+    return false
+end
+
+if checkSavedKey() then
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/kairobloc/stealanegg/refs/heads/main/chillihubv7.lua"))()
+    end)
+    return
+end
+
+--// Create Main UI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ChilliHubKeySystem"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 450, 0, 280)
+MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
+MainFrame.BackgroundTransparency = 0.25 -- Glassmorphism
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 16)
+UICorner.Parent = MainFrame
+
+-- Rainbow UIStroke (Modern Border)
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Parent = MainFrame
+UIStroke.Thickness = 2
+UIStroke.Transparency = 0.1
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Rainbow Color Loop
+local hue = 0
+RunService.RenderStepped:Connect(function()
+    hue = (hue + 0.003) % 1
+    UIStroke.Color = Color3.fromHSV(hue, 0.85, 1)
+end)
+
+-- Title Header
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 0, 0, 20)
+Title.Size = UDim2.new(1, 0, 0, 32)
+Title.Font = Enum.Font.FredokaOne
+Title.Text = "Chilli Hub V7"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 24
+
+-- Subtitle Description
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Parent = MainFrame
+Subtitle.BackgroundTransparency = 1
+Subtitle.Position = UDim2.new(0, 0, 0, 52)
+Subtitle.Size = UDim2.new(1, 0, 0, 20)
+Subtitle.Font = Enum.Font.GothamMedium
+Subtitle.Text = "Please complete the verification below to proceed"
+Subtitle.TextColor3 = Color3.fromRGB(160, 165, 185)
+Subtitle.TextSize = 13
+
+-- Input Frame Container
+local InputBoxBg = Instance.new("Frame")
+InputBoxBg.Parent = MainFrame
+InputBoxBg.BackgroundColor3 = Color3.fromRGB(20, 22, 32)
+InputBoxBg.BackgroundTransparency = 0.3
+InputBoxBg.Position = UDim2.new(0.08, 0, 0, 88)
+InputBoxBg.Size = UDim2.new(0.84, 0, 0, 48)
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 10)
+InputCorner.Parent = InputBoxBg
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Parent = InputBoxBg
+InputStroke.Color = Color3.fromRGB(255, 255, 255)
+InputStroke.Transparency = 0.85
+InputStroke.Thickness = 1
+
+-- Key Input TextBox
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = InputBoxBg
+TextBox.BackgroundTransparency = 1
+TextBox.Size = UDim2.new(1, -20, 1, 0)
+TextBox.Position = UDim2.new(0, 10, 0, 0)
+TextBox.Font = Enum.Font.Gotham
+TextBox.PlaceholderText = "Paste your access key here..."
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.PlaceholderColor3 = Color3.fromRGB(120, 125, 145)
+TextBox.TextSize = 13
+TextBox.ClearTextOnFocus = false
+
+-- Status / Notification Banner Inside Menu
+local StatusBanner = Instance.new("Frame")
+StatusBanner.Name = "StatusBanner"
+StatusBanner.Parent = MainFrame
+StatusBanner.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+StatusBanner.BackgroundTransparency = 0.2
+StatusBanner.Position = UDim2.new(0.08, 0, 0, 148)
+StatusBanner.Size = UDim2.new(0.84, 0, 0, 36)
+
+local BannerCorner = Instance.new("UICorner")
+BannerCorner.CornerRadius = UDim.new(0, 8)
+BannerCorner.Parent = StatusBanner
+
+local BannerStroke = Instance.new("UIStroke")
+BannerStroke.Parent = StatusBanner
+BannerStroke.Color = Color3.fromRGB(60, 65, 85)
+BannerStroke.Thickness = 1
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Parent = StatusBanner
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Size = UDim2.new(1, 0, 1, 0)
+StatusLabel.Font = Enum.Font.GothamBold
+StatusLabel.Text = "System Ready - Waiting for Key"
+StatusLabel.TextColor3 = Color3.fromRGB(180, 185, 200)
+StatusLabel.TextSize = 12
+
+-- Button Container (Side by Side)
+local GetKeyBtn = Instance.new("TextButton")
+GetKeyBtn.Parent = MainFrame
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(28, 30, 42)
+GetKeyBtn.BackgroundTransparency = 0.2
+GetKeyBtn.Position = UDim2.new(0.08, 0, 0, 198)
+GetKeyBtn.Size = UDim2.new(0.40, 0, 0, 46)
+GetKeyBtn.Font = Enum.Font.GothamBold
+GetKeyBtn.Text = "GET KEY"
+GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyBtn.TextSize = 13
+
+local GetKeyCorner = Instance.new("UICorner")
+GetKeyCorner.CornerRadius = UDim.new(0, 10)
+GetKeyCorner.Parent = GetKeyBtn
+
+local GetKeyStroke = Instance.new("UIStroke")
+GetKeyStroke.Parent = GetKeyBtn
+GetKeyStroke.Color = Color3.fromRGB(80, 85, 110)
+GetKeyStroke.Thickness = 1
+
+local CheckKeyBtn = Instance.new("TextButton")
+CheckKeyBtn.Parent = MainFrame
+CheckKeyBtn.BackgroundColor3 = Color3.fromRGB(35, 38, 52)
+CheckKeyBtn.BackgroundTransparency = 0.2
+CheckKeyBtn.Position = UDim2.new(0.52, 0, 0, 198)
+CheckKeyBtn.Size = UDim2.new(0.40, 0, 0, 46)
+CheckKeyBtn.Font = Enum.Font.GothamBold
+CheckKeyBtn.Text = "CHECK KEY"
+CheckKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckKeyBtn.TextSize = 13
+
+local CheckKeyCorner = Instance.new("UICorner")
+CheckKeyCorner.CornerRadius = UDim.new(0, 10)
+CheckKeyCorner.Parent = CheckKeyBtn
+
+local CheckKeyStroke = Instance.new("UIStroke")
+CheckKeyStroke.Parent = CheckKeyBtn
+CheckKeyStroke.Thickness = 1.2
+
+-- Rainbow outline for CHECK KEY button
+RunService.RenderStepped:Connect(function()
+    CheckKeyStroke.Color = Color3.fromHSV((hue + 0.3) % 1, 0.8, 1)
+end)
+
+-- Smooth Sine Wave Shake Animation
+local isShaking = false
+local function smoothShake()
+    if isShaking then return end
+    isShaking = true
+    
+    local originalPos = UDim2.new(0.5, 0, 0.5, 0)
+    local offsets = {10, -8, 6, -4, 2, 0}
+    
+    for _, offset in ipairs(offsets) do
+        local tweenInfo = TweenInfo.new(0.04, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(MainFrame, tweenInfo, {Position = originalPos + UDim2.new(0, offset, 0, 0)})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+    
+    isShaking = false
+end
+
+-- Get Key Logic
+GetKeyBtn.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(GET_KEY_LINK)
+        StatusLabel.TextColor3 = Color3.fromRGB(80, 200, 255)
+        BannerStroke.Color = Color3.fromRGB(80, 200, 255)
+        StatusLabel.Text = "Key link copied to clipboard!"
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 170, 0)
+        BannerStroke.Color = Color3.fromRGB(255, 170, 0)
+        StatusLabel.Text = "Clipboard not supported by executor"
+    end
+end)
+
+-- Check Key Logic
+CheckKeyBtn.MouseButton1Click:Connect(function()
+    if TextBox.Text == CORRECT_KEY then
+        StatusLabel.TextColor3 = Color3.fromRGB(80, 250, 123)
+        BannerStroke.Color = Color3.fromRGB(80, 250, 123)
+        StatusLabel.Text = "Key Verified! Loading script..."
+        
+        -- Save key silently (Hidden persistence)
+        pcall(function()
+            if writefile then
+                writefile(KEY_SAVED_NAME, CORRECT_KEY)
+            end
+        end)
+        
+        task.wait(0.6)
+        
+        -- Smooth Fade Out
+        local fadeTween = TweenService:Create(MainFrame, TweenInfo.new(0.3), {BackgroundTransparency = 1})
+        fadeTween:Play()
+        fadeTween.Completed:Wait()
+        
+        ScreenGui:Destroy()
+        
+        -- Load main script
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/kairobloc/stealanegg/refs/heads/main/chillihubv7.lua"))()
+        end)
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 85, 85)
+        BannerStroke.Color = Color3.fromRGB(255, 85, 85)
+        StatusLabel.Text = "Invalid Key! Please check and try again."
+        
+        TextBox.Text = "" -- Auto clear input
+        smoothShake()
+    end
+end)
